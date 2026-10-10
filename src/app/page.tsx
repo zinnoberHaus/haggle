@@ -11,6 +11,7 @@ import { getDeals } from "@/lib/deals";
 import { DealCard } from "@/components/deal-card";
 import { DealFeed } from "@/components/deal-feed";
 import { money } from "@/lib/format";
+import { guides } from "@/lib/guides";
 export const dynamic = "force-dynamic";
 export default async function Home({
   searchParams,
@@ -25,6 +26,13 @@ export default async function Home({
   const merchants = [...new Set(deals.map((d) => d.merchant))]
     .filter((m) => m !== "Various stores")
     .slice(0, 6);
+  const couponOffers = deals
+    .filter((deal) =>
+      /coupon|promo code|code |extra \d+%/i.test(
+        deal.description + " " + deal.title,
+      ),
+    )
+    .slice(0, 3);
   return (
     <div className="home">
       <section className="rundown">
@@ -222,18 +230,85 @@ export default async function Home({
           </section>
         </aside>
       </div>
-      <section className="guides-banner">
-        <div>
-          <span className="eyebrow">A little shopping know-how</span>
-          <h2>
-            Good deals start with
-            <br />
-            better questions.
-          </h2>
+      <section className="home-discovery" aria-labelledby="home-guides-title">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">A little shopping know-how</span>
+            <h2 id="home-guides-title">
+              Good deals start with better questions.
+            </h2>
+          </div>
+          <Link className="home-section-link" href="/guides">
+            All guides <ArrowUpRight size={16} />
+          </Link>
         </div>
-        <Link href="/guides">
-          Our no-nonsense shopping guides <ArrowUpRight size={19} />
-        </Link>
+        <div className="home-guide-grid">
+          {guides.map((guide) => (
+            <Link
+              className="home-guide-preview"
+              key={guide.slug}
+              href={`/guides/${guide.slug}`}
+            >
+              <div
+                className="home-guide-art"
+                style={{ background: guide.tint }}
+                aria-hidden="true"
+              >
+                <span>{guide.symbol}</span>
+                <ArrowUpRight size={20} />
+              </div>
+              <span className="eyebrow">{guide.category}</span>
+              <h3>{guide.title}</h3>
+              <span className="small-text muted">
+                {guide.readTime} · Haggle guide
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="home-discovery" aria-labelledby="home-coupons-title">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Offers with a little extra off</span>
+            <h2 id="home-coupons-title">Coupons, with the fine print.</h2>
+          </div>
+          <Link className="home-section-link" href="/coupons">
+            All coupon offers <ArrowUpRight size={16} />
+          </Link>
+        </div>
+        <p className="home-discovery-note muted">
+          Promotions mentioned in the publisher’s feed. Check the code and
+          exclusions in the full offer; Haggle hasn’t tested them at checkout.
+        </p>
+        {couponOffers.length ? (
+          <div className="home-coupon-grid">
+            {couponOffers.map((deal) => (
+              <article className="home-coupon-preview" key={deal.id}>
+                <span className="eyebrow">{deal.merchant}</span>
+                <Link href={`/deals/${deal.id}`}>
+                  <h3>{deal.title}</h3>
+                </Link>
+                <div className="home-coupon-actions">
+                  <a
+                    href={deal.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                  >
+                    From {deal.sourceName} ↗
+                  </a>
+                  <Link href={`/deals/${deal.id}`}>
+                    Offer & conditions <ArrowUpRight size={14} />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="notice">
+            No coupon offers in the current feed. The latest deals above are
+            still worth a look.
+          </p>
+        )}
       </section>
       <div className="trust-strip">
         <span>No pressure to sign up</span>

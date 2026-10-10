@@ -1386,3 +1386,132 @@ select.field {
     animation: none !important;
   }
 }
+
+/* Homepage discovery sections and persistent category selection. */
+.category-nav a[aria-current="page"] {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+  font-weight: 700;
+}
+.home-discovery {
+  border-top: 1.5px solid var(--ink);
+  padding-top: 20px;
+}
+.home-discovery .section-heading {
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 24px;
+  margin-bottom: 20px;
+}
+.home-discovery .section-heading h2 {
+  font-size: 29px;
+  margin-top: 7px;
+}
+.home-section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.home-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.home-guide-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.home-guide-art {
+  height: 116px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  color: var(--ink);
+}
+.home-guide-art > span {
+  font: 68px/1 var(--serif);
+}
+.home-guide-art > svg {
+  align-self: flex-start;
+}
+.home-guide-preview h3 {
+  font: 500 22px/1.15 var(--serif);
+  letter-spacing: -0.3px;
+}
+.home-guide-preview > .small-text {
+  margin-top: auto;
+}
+.home-discovery-note {
+  max-width: 80ch;
+  font-size: 12px;
+  margin: -5px 0 18px;
+}
+.home-coupon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.home-coupon-preview {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  padding: 20px;
+}
+.home-coupon-preview h3 {
+  font: 500 20px/1.2 var(--serif);
+}
+.home-coupon-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+  font-size: 11px;
+}
+.home-coupon-actions > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.home-coupon-actions > a:first-child {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 900px) {
+  .home-guide-grid,
+  .home-coupon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .home-guide-grid {
+    gap: 20px 14px;
+  }
+  .home-guide-art {
+    height: 100px;
+    padding: 15px;
+  }
+  .home-guide-preview h3 {
+    font-size: 20px;
+  }
+  .home-coupon-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-discovery .section-heading h2 {
+    font-size: 27px;
+  }
+}

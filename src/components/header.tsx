@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Search, Bookmark, ArrowDown } from "lucide-react";
+import { CategoryNav, CategoryNavLinks } from "./category-nav";
 export function Header() {
   return (
     <header className="site-header">
@@ -28,28 +30,9 @@ export function Header() {
           <Bookmark size={15} /> My Haggle
         </Link>
       </div>
-      <nav className="category-nav" aria-label="Deal categories">
-        {[
-          "All",
-          "Electronics",
-          "Home",
-          "Fashion",
-          "Beauty",
-          "Baby & Kids",
-          "Grocery",
-          "Travel",
-        ].map((c) => (
-          <Link
-            href={c === "All" ? "/" : `/?category=${encodeURIComponent(c)}`}
-            key={c}
-          >
-            {c}
-          </Link>
-        ))}
-        <Link href="/extension" className="extension-nav">
-          Meet your shopping sidekick ↗
-        </Link>
-      </nav>
+      <Suspense fallback={<CategoryNavLinks />}>
+        <CategoryNav />
+      </Suspense>
     </header>
   );
 }
