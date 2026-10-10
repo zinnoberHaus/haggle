@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.vercel/
+.env*
+!.env.example
+*.tsbuildinfo
+.DS_Store
+.agents/
+.claude/
+.codex/
+.cursor/
+.windsurf/
+.opencode/
+skills-lock.json
+playwright-report/
+test-results/

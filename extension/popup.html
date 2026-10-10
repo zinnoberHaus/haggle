@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Search with Haggle</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <span class="mark" aria-hidden="true">↓</span
+      ><span class="wordmark">haggle</span
+      ><span class="preview">Companion</span>
+    </header>
+    <h1>A second look before you buy.</h1>
+    <form id="search-form">
+      <label for="query">Product name or shopping question</label>
+      <textarea
+        id="query"
+        name="query"
+        rows="3"
+        maxlength="500"
+        required
+        placeholder="What are you shopping for?"
+      ></textarea>
+      <button type="button" id="page-title" class="quiet">
+        Use this page’s title
+      </button>
+      <button type="submit" id="search-button">Search Haggle</button>
+    </form>
+    <p class="note">
+      Opens a new tab. Only this search text is sent to your chosen Haggle site.
+    </p>
+    <details>
+      <summary>Site settings</summary>
+      <form id="settings-form">
+        <label for="site-url">Haggle site address</label>
+        <input
+          id="site-url"
+          type="url"
+          name="siteUrl"
+          required
+          placeholder="https://your-haggle-site.vercel.app"
+        />
+        <p class="note">
+          Choose a site you trust. This is where your searches will go.
+        </p>
+        <button type="submit" class="quiet">Save site address</button>
+      </form>
+    </details>
+    <p id="status" role="status" aria-live="polite"></p>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

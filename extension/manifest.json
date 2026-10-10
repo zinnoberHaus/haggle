@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Haggle — shopping search companion",
+  "description": "Search Haggle for selected text or the title of a product page. You choose what to search.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "123",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": {
+    "default_title": "Search with Haggle",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  }
+}
