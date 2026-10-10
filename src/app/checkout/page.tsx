@@ -13,9 +13,15 @@ export default async function Checkout({
   searchParams: Promise<{ plan?: string }>;
 }) {
   const { plan } = await searchParams;
-  const user = await getCurrentUser();
-  if (!user) redirect("/sign-in?next=/checkout");
   const valid = z.uuid().safeParse(plan);
+  const user = await getCurrentUser();
+  if (!user)
+    redirect(
+      "/sign-in?next=" +
+        encodeURIComponent(
+          valid.success ? `/checkout?plan=${valid.data}` : "/checkout",
+        ),
+    );
   const rows = valid.success
     ? await sql`SELECT * FROM cart_plans WHERE user_id=${user.id} AND id=${valid.data}`
     : await sql`SELECT * FROM cart_plans WHERE user_id=${user.id} ORDER BY created_at DESC LIMIT 1`;
@@ -97,6 +103,19 @@ export default async function Checkout({
               No order has been placed, no card is connected, and no cashback or
               price protection has been activated. Automated checkout is not
               available.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link href={`/purchases?plan=${selected.id}`} className="button">
+                Record a purchase
+              </Link>
+              <Link href="/compare" className="button secondary">
+                Calculate the final cost
+              </Link>
+            </div>
+            <p className="small-text muted" style={{ marginTop: 14 }}>
+              After buying at the store, record what you paid and track a
+              possible price adjustment. Purchase records are supplied by you;
+              Haggle does not verify receipts.
             </p>
             <Link href="/cart">Compare another list ↗</Link>
           </section>

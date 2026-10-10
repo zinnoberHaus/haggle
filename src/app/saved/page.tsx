@@ -78,6 +78,18 @@ export default async function Saved() {
         Price checks follow the source feed, so some offers may disappear before
         the price changes. Email alerts are not enabled in this beta.
       </p>
+      <section className="panel">
+        <span className="eyebrow">After you buy</span>
+        <h2>Keep an eye on what you already bought.</h2>
+        <p className="muted" style={{ margin: "12px 0 20px" }}>
+          Record your paid price and the store’s adjustment policy, then prepare
+          a request if a comparable price drops. You review and submit each
+          request.
+        </p>
+        <Link className="button secondary" href="/purchases">
+          Purchases & price adjustments
+        </Link>
+      </section>
     </>
   );
 }

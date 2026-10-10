@@ -22,6 +22,10 @@ AI receives only the current offer records and the signed-in user's question. It
 
 Cart comparison uses the current collected feed and the user's entered baseline. A user explicitly chooses each replacement; the server resolves and snapshots published prices. Approval saves a shopping plan. The checkout companion provides source links and eligibility checks. It does not impersonate a retailer checkout.
 
+The final-cost worksheet is public and optionally saved to an account. It computes in integer cents and distinguishes the amount due at checkout from possible later cashback and card rewards. Blank shipping/tax stays unknown, and already-included coupons are never deducted twice. Server handlers validate the source offer and recompute all stored results. Each saved worksheet includes its input assumptions and source snapshot; changed source prices trigger a warning without silently replacing a user's entries.
+
+User-reported purchases live in a separate table from the verified savings ledger. Purchase totals, baseline differences, received refunds and zero fees are constrained on the server and in the database. A composite foreign key prevents linking another user's cart plan. Price-adjustment assistance uses a user-entered policy/deadline and actual observed publisher prices to create a request draft, with explicit uncertainty about total costs and eligibility. Copy/download never sends a request. Users mark requests submitted, rejected or received themselves; only received refunds enter their reported totals. These records and worksheets support editing/deletion and are included in owner-scoped export.
+
 ## External prerequisites for later capabilities
 
 Direct retailer/cart access, coupon validation, cashback integrations, purchase confirmation, refund authorization and billing settlement require their own verified provider integrations. No fake versions are substituted. A paid success fee requires an auditable realized-savings definition and explicit charge approval before enabling it. Broader merchant APIs need licensing compatible with permanent price history (Best Buy's default cache terms do not provide that).

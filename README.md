@@ -5,7 +5,7 @@ A public shopping deal hub based on the supplied Haggle v2 design: warm paper, o
 - **Live:** https://haggle-blue.vercel.app
 - **Repository:** https://github.com/zinnoberHaus/haggle
 
-Production is currently a public beta. Managed account flows passed local integration tests, but live signup is blocked until the production URL is added to Neon Auth's trusted domains. See [verification evidence](docs/verification.md) for the current deployment checks and remaining setup.
+Production is a public beta. Live signup, signin, account-owned data and AI requests have passed integration checks. See [verification evidence](docs/verification.md) for the tested scope and remaining limitations.
 
 ## What works
 
@@ -14,8 +14,10 @@ Production is currently a public beta. Managed account flows passed local integr
 - Neon managed authentication: email/password sign-up and sign-in, email verification, reset-password flow, profile/password management and session revocation.
 - Account-owned saved deals, price targets, in-app target matches, preferences and data export.
 - Shopping-list comparisons with explicitly selected alternatives, saved approval plans and a checkout checklist linking to the source.
+- A final-cost worksheet separates checkout charges from conditional cashback/card rewards, preserves unknown tax/shipping, and saves account-owned comparisons.
+- User-reported purchase records, savings, refunds and price-adjustment request drafts with retailer-policy notes. Users review and submit requests themselves.
 - A real Chrome/Chromium MV3 search companion, available as an unpacked-extension ZIP.
-- Original shopping guides, fee calculator and an empty-by-default savings ledger.
+- Original shopping guides, fee calculator and a savings dashboard that separates user-reported records from the empty-by-default verified ledger.
 
 ## Current limits
 
@@ -45,6 +47,8 @@ npm run build
 ```
 
 For the cart handoff and delayed saved-state browser regressions, start the production build with `npm start -- --port 3003`, then run `TEST_BASE_URL=http://localhost:3003 node scripts/cart-ui-smoke.mjs`. The saved-state test mocks its API responses; it does not test authentication or write account data.
+
+`TEST_BASE_URL=http://localhost:3003 npx tsx scripts/shopping-records-smoke.ts` checks actual purchase/comparison APIs with two isolated accounts, including ownership and export. `TEST_BASE_URL=http://localhost:3003 node scripts/purchases-ui-smoke.mjs` checks the purchase/refund browser flow. Both create and remove their own test identities; the server must use the same database as `.env.local`.
 
 `RUN_LIVE_INGESTION_TEST=1 npm test` performs actual feed ingestion into the configured database and verifies replay idempotency. `TEST_BASE_URL=http://localhost:3002 npx tsx scripts/auth-smoke.ts` exercises actual managed auth with isolated temporary test identities; it requires the running app to use the same database as `.env.local`. Do not run against a database that you do not own.
 

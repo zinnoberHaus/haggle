@@ -41,6 +41,25 @@ export default function PrivacyPage() {
         . Signing out removes access to the current session; it does not delete
         stored account records.
       </p>
+      <h2>Shopping plans, purchases, and comparisons</h2>
+      <p>
+        If you save a shopping plan or cost comparison, Haggle stores the
+        products, amounts, source links, and eligibility notes you enter with
+        your account. Purchase records also store the merchant, purchase date,
+        paid and comparison totals, and any price-adjustment status, policy
+        link, deadline, or refund amount you record. These are user-reported
+        records; Haggle does not verify a receipt or access your retailer
+        account. Do not enter payment-card numbers, retailer passwords, or
+        sensitive order details in these forms.
+      </p>
+      <p>
+        You can edit or delete purchase records and cost comparisons, and they
+        are included in your account export. A shopping-list draft can be kept
+        in your current tab’s session storage to preserve it during sign-in;
+        saving the plan clears that draft. Copying or downloading a
+        price-adjustment request creates text for you to review and submit
+        yourself. Haggle does not send it to a retailer.
+      </p>
       <h2>Search and optional AI processing</h2>
       <p>
         Search text is sent to Haggle to find relevant offers. When you use an

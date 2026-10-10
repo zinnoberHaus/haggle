@@ -70,6 +70,16 @@ export default async function DealPage({
             publication. Source links may earn the publisher a commission.
           </div>
           <p className="small-text muted">Haggle never buys on your behalf.</p>
+          <p style={{ marginTop: 14 }}>
+            <Link href={`/compare?offerId=${deal.id}`}>
+              Compare shipping, coupons, and rewards ↗
+            </Link>
+          </p>
+          <p style={{ marginTop: 10 }}>
+            <Link href={`/purchases?offer=${deal.id}`}>
+              Already bought it? Record your purchase ↗
+            </Link>
+          </p>
         </div>
       </div>
       <div className="grid-two">

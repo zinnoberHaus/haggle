@@ -10,7 +10,7 @@ export const shortDate = (date: string) =>
   new Date(date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
-    timeZone: "America/New_York",
+    timeZone: /^\d{4}-\d{2}-\d{2}$/.test(date) ? "UTC" : "America/New_York",
   });
 export function matchQuery(text: string, query: string) {
   const words = query

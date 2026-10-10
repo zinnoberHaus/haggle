@@ -21,6 +21,13 @@ export default async function Cart() {
         Nothing changes until you choose it.
       </p>
       <CartComparison deals={await getDeals()} />
+      <p className="notice">
+        Ready to check the full price?{" "}
+        <Link href="/compare">
+          Compare shipping, tax, additional coupons and conditional rewards
+        </Link>{" "}
+        before choosing a store.
+      </p>
       {plans.length > 0 && (
         <section className="panel">
           <h2>Your saved shopping plans</h2>

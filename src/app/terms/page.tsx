@@ -26,6 +26,13 @@ export default function Terms() {
         target match is an in-app notification, not a promise that a price is
         still available.
       </p>
+      <p>
+        Cost worksheets use the amounts and conditions you enter. Conditional
+        rewards may never be paid and do not reduce the amount due at checkout.
+        Purchase records, savings amounts, and received refunds you enter are
+        user-reported. A generated price-adjustment request does not establish
+        eligibility; check the retailer’s current policy and submit it yourself.
+      </p>
       <h2>Fees and affiliate links</h2>
       <p>
         Haggle charges no fees during this beta. The fee calculator describes a
@@ -43,8 +50,9 @@ export default function Terms() {
       <h2>Beta availability</h2>
       <p>
         Features can change or be unavailable during development. Email price
-        alerts, checkout automation, and price-drop refund claims are not
-        available. See the current interface for which actions are supported.
+        alerts, checkout automation, and automatically submitted refund claims
+        are not available. See the current interface for which actions are
+        supported.
       </p>
       <p>
         <Link href="/privacy">Privacy and data sources</Link> ·{" "}

@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         "/account",
         "/saved",
         "/savings",
+        "/purchases",
         "/checkout",
         "/reset-password",
       ],

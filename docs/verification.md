@@ -1,6 +1,6 @@
 # Verification — 2026-10-10
 
-## Evidence recorded before publication
+## Verified implementation and deployment
 
 - Dedicated repository created at `zinnoberHaus/haggle` and separate Vercel project `prj_m7MgvzhzoZGSAkJ2XSKFne5IkHos` provisioned. Neon resource `haggle-db` is on its observed Free plan. No payment integration is enabled.
 - `npm run typecheck` passed. `npm run build` passed with all public/account/API routes compiled. Initial Vercel production deployment `dpl_6dFJpbNDum5eaj8Z5Z4DQ9sR9Qra` reported READY and aliased `https://haggle-blue.vercel.app`.
@@ -21,10 +21,24 @@
 
 Development testing encountered an HMR reload loop on the local dev server. The issue did not reproduce on the fresh production build, where signin and cart checks passed. No source-level cause was established; no claim that the development-runtime issue was fixed is made.
 
-## Still requiring evidence
+## Production authentication resolved
 
-Production auth initially returned `INVALID_ORIGIN`: Neon trusted origins was empty even after the Vercel deployment. The exact production origin must be added through the managed provider, then signup/signin/saves/AI must be verified against the live alias. Local tests do not prove this production configuration. The user has been given the exact Haggle resource link and requested setting.
+Production initially returned `INVALID_ORIGIN`. The exact production origin was added to the stored auth allowlist using the existing database-owner role, with a checked endpoint and prior value. The application continues forwarding and validating the actual Origin. See operations for the bootstrap method and recovery limits.
 
-AI Gateway generated a real response with `openai/gpt-5.4-nano` using the linked project's OIDC token, and the authenticated app endpoint passed locally. A deployed authenticated Ask request remains dependent on production auth. The free tier rejected the higher model tried first; no paid top-up was performed.
+The live alias then passed signup, managed session validation, browser credential signin, preferences, saved target, cart approval/checklist persistence, export, signout and protected redirects. Forged auth/profile origins returned 403, forged owner input returned 400 and an ordinary user could not access administration (403). The generated identity and associated test records were removed and cleanup checked.
+
+Exactly one live authenticated Ask request returned 200, with a 976-character answer and three source IDs checked against actual feed records. AI Gateway uses `openai/gpt-5.4-nano`; no paid credit top-up was performed.
+
+## Purchase and full-cost flow expansion
+
+Additive migrations `004-purchases.sql` and `005-comparisons.sql` applied successfully, preserving existing accounts and records. The expanded suite includes 28 passing cases, with only the opt-in live ingestion test skipped. Seven purchase cases cover exact money, reported savings/refund semantics, real calendar dates, unsafe policy URLs, forged fields and plan ownership. Eight cost cases cover exact cents, coupon double-count prevention, conditional rewards, unknown costs, caps, forged totals and source warnings. A further calendar-date regression prevents purchase dates shifting to the preceding day. The production build includes the new public/private pages and API routes.
+
+`scripts/shopping-records-smoke.ts` passed against the local production build with two isolated managed accounts: purchase/refund create/update/list/delete, cross-account and forged-origin denial, ownership of linked plans, server-recomputed comparison totals, null unknown costs, isolated export, and separation of user-reported savings from the verified ledger. Both identities and their records were removed and cleanup checked.
+
+Purchase browser tests passed plan prefill with the actual paid field left blank, create/edit/refund recording, request download, savings display, export and delete. The 390px view had no overflow or browser errors. The repeatable test is `scripts/purchases-ui-smoke.mjs`. The review identified the date-only display issue described above, which was corrected.
+
+Anonymous calculator browser checks passed at 1440px and 390px. An included coupon was not deducted twice; unknown shipping/tax left final totals unknown; $93 payable remained $93 despite $7 in potential rewards, while conditional cost was $86. The real anonymous save returned 401 and the signin round trip retained the worksheet. No backend records were written in this public calculator check.
+
+## Still requiring evidence or external integrations
 
 Provider reset-token semantics were tested, but inbox delivery was not independently verified. Email price alerts/digests, automated retailer carts/checkout/refunds, billing and Chrome Web Store publication are unavailable and labeled accordingly. No full database restore drill or commercial-readiness certification is claimed.
