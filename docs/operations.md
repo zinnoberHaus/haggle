@@ -21,6 +21,8 @@ Neon provider recovery applies to the dedicated Haggle database; check the actua
 
 ## User administration
 
+Production activation still needs the exact origin `https://haggle-blue.vercel.app` added under Neon Auth's trusted domains. Open the dedicated [Haggle resource](https://vercel.com/my-team-ae70891f/~/stores/integration/store_AzSrsKuwHrxIu9tR), then its Neon Auth settings and Domains/Trusted Domains. The provider currently returns `403 INVALID_ORIGIN` and its trusted-origin list remained empty after the first Git-connected deployment. Do not remove or rewrite the forwarded Origin header to evade that check. After saving the provider setting, verify signup, signin, saved deals and one AI request against the primary production alias.
+
 Users manage their profile, password, sessions and exported app data at `/account`. Managed identity administration (account deletion, restrictions and roles) is available through the Haggle Neon resource's Auth console. Access the resource from Vercel Storage; never use another project's users.
 
 For the app's additional read-only user table, create your own normal account, find its exact ID in the managed console, and add that ID to `HAGGLE_ADMIN_USER_IDS` in Vercel. Redeploy, then open `/account/admin`. Empty configuration grants nobody access; no email match or first-user rule grants administration automatically. The table shows the 100 newest users. The app does not store or display password hashes or reset tokens.

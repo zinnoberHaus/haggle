@@ -44,6 +44,8 @@ npm test
 npm run build
 ```
 
+For the cart handoff and delayed saved-state browser regressions, start the production build with `npm start -- --port 3003`, then run `TEST_BASE_URL=http://localhost:3003 node scripts/cart-ui-smoke.mjs`. The saved-state test mocks its API responses; it does not test authentication or write account data.
+
 `RUN_LIVE_INGESTION_TEST=1 npm test` performs actual feed ingestion into the configured database and verifies replay idempotency. `TEST_BASE_URL=http://localhost:3002 npx tsx scripts/auth-smoke.ts` exercises actual managed auth with isolated temporary test identities; it requires the running app to use the same database as `.env.local`. Do not run against a database that you do not own.
 
 ## Operations

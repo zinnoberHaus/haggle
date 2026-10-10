@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { Plus, X, ArrowRight, Check } from "lucide-react";
 import type { Deal } from "@/lib/feed-types";
 import { money, matchQuery } from "@/lib/format";
 type Item = { key: number; name: string; price: string; offerId: string };
+const draftKey = "haggle.cart-draft.v1";
 export function CartComparison({ deals }: { deals: Deal[] }) {
+  const choiceId = useId();
   const [items, setItems] = useState<Item[]>([
     { key: 1, name: "", price: "", offerId: "" },
   ]);
@@ -13,6 +15,50 @@ export function CartComparison({ deals }: { deals: Deal[] }) {
   const [error, setError] = useState("");
   const [planId, setPlanId] = useState("");
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(draftKey);
+      if (!raw) return;
+      const draft: unknown = JSON.parse(raw);
+      if (
+        !Array.isArray(draft) ||
+        draft.length < 1 ||
+        draft.length > 10 ||
+        !draft.every(
+          (item) =>
+            item &&
+            typeof item.name === "string" &&
+            item.name.trim().length >= 2 &&
+            item.name.length <= 150 &&
+            typeof item.price === "string" &&
+            Number.isFinite(Number(item.price)) &&
+            Number(item.price) >= 0.01 &&
+            Number(item.price) <= 100000 &&
+            typeof item.offerId === "string",
+        )
+      ) {
+        sessionStorage.removeItem(draftKey);
+        return;
+      }
+      setItems(
+        draft.map((item, index) => ({
+          key: index + 1,
+          name: item.name,
+          price: item.price,
+          offerId: deals.some(
+            (deal) => deal.id === item.offerId && deal.priceCents !== null,
+          )
+            ? item.offerId
+            : "",
+        })),
+      );
+      setStage("compare");
+    } catch {
+      // Storage may be disabled. Comparing without persistence still works.
+    }
+    // Restore once on arrival; later feed refreshes must not replace edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const patch = (key: number, change: Partial<Item>) =>
     setItems(items.map((i) => (i.key === key ? { ...i, ...change } : i)));
   const before = items.reduce(
@@ -43,6 +89,14 @@ export function CartComparison({ deals }: { deals: Deal[] }) {
         }),
       });
       if (r.status === 401) {
+        try {
+          sessionStorage.setItem(draftKey, JSON.stringify(items));
+        } catch {
+          setError(
+            "Sign in to save this plan. Your browser blocked draft storage, so copy your list before signing in.",
+          );
+          return;
+        }
         setError(
           "Sign in to save this plan. You can keep comparing without an account.",
         );
@@ -50,6 +104,11 @@ export function CartComparison({ deals }: { deals: Deal[] }) {
       }
       if (!r.ok) throw Error("Could not save this plan. Try again.");
       const data = await r.json();
+      try {
+        sessionStorage.removeItem(draftKey);
+      } catch {
+        /* Storage is optional. */
+      }
       setPlanId(data.id);
       setStage("approved");
     } catch (e) {
@@ -191,9 +250,12 @@ export function CartComparison({ deals }: { deals: Deal[] }) {
                     </p>
                   ) : (
                     <>
-                      <label className="field">
-                        Your choice
+                      <div className="field">
+                        <label htmlFor={`${choiceId}-${i.key}`}>
+                          Your choice
+                        </label>
                         <select
+                          id={`${choiceId}-${i.key}`}
                           value={i.offerId}
                           onChange={(e) =>
                             patch(i.key, { offerId: e.target.value })
@@ -208,7 +270,7 @@ export function CartComparison({ deals }: { deals: Deal[] }) {
                             </option>
                           ))}
                         </select>
-                      </label>
+                      </div>
                       {i.offerId && (
                         <Link
                           href={`/deals/${i.offerId}`}

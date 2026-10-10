@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 const SavedContext = createContext<{
   ids: Set<string>;
   ready: boolean;
@@ -10,12 +10,20 @@ export function SavedProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [ids, setIds] = useState<Set<string>>(new Set());
   const [ready, setReady] = useState(false);
+  const revision = useRef(0);
+  const [reconcile, setReconcile] = useState(0);
   useEffect(() => {
     let active = true;
-    fetch("/api/me/saved")
-      .then(async (r) => (r.ok ? r.json() : { saved: [] }))
+    const controller = new AbortController();
+    const readRevision = revision.current;
+    fetch("/api/me/saved", { signal: controller.signal })
+      .then(async (r) => {
+        if (r.status === 401) return { saved: [] };
+        if (!r.ok) throw new Error("Could not load saved deals.");
+        return r.json();
+      })
       .then((data) => {
-        if (active) {
+        if (active && revision.current === readRevision) {
           setIds(
             new Set(data.saved.map((s: { offerId: string }) => s.offerId)),
           );
@@ -25,20 +33,26 @@ export function SavedProvider({ children }: { children: React.ReactNode }) {
       .catch(() => {});
     return () => {
       active = false;
+      controller.abort();
     };
-  }, [pathname]);
+  }, [pathname, reconcile]);
   return (
     <SavedContext.Provider
       value={{
         ids,
         ready,
-        setSaved: (id, saved) =>
+        setSaved: (id, saved) => {
+          // Invalidate older reads before React schedules the reconciliation.
+          revision.current += 1;
           setIds((prev) => {
             const next = new Set(prev);
             if (saved) next.add(id);
             else next.delete(id);
             return next;
-          }),
+          });
+          setReady(true);
+          setReconcile((value) => value + 1);
+        },
       }}
     >
       {children}
