@@ -63,9 +63,10 @@ export default function PrivacyPage() {
       <h2>Search and optional AI processing</h2>
       <p>
         Search text is sent to Haggle to find relevant offers. When you use an
-        AI-powered answer and the AI service is enabled, your query and relevant
-        offer information may also be processed by the configured AI provider
-        through Vercel AI Gateway. Avoid including payment details, passwords,
+        AI-powered answer or shopping-list review, your question or entered
+        product names and comparison prices, along with relevant offer
+        information, are processed by the configured AI provider through
+        Vercel AI Gateway. Avoid including payment details, passwords,
         or other sensitive information in a shopping question.
       </p>
       <p>

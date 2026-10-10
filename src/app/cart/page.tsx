@@ -18,7 +18,7 @@ export default async function Cart() {
       <h1 className="page-title">Same list. A second look.</h1>
       <p className="page-intro">
         Before you check out, compare your list with the offers we’ve collected.
-        Nothing changes until you choose it.
+        Ask AI for a second opinion, then choose what fits.
       </p>
       <CartComparison deals={await getDeals()} />
       <p className="notice">

@@ -35,7 +35,7 @@ Managed password-reset semantics, one-time token use, signup and login were exer
 
 ## Costs and constraints
 
-AI is limited to ten requests per user per UTC day; provider credit exhaustion returns a helpful error without substituting a scripted answer. There is no billing integration and no fee is charged. Monitor Vercel runtime, Neon storage, and AI Gateway usage; no paid credits were added. Email price alerts and recurring digests remain disabled even if a user saves notification preferences.
+Ask and shopping-list AI review share a combined limit of ten requests per user per UTC day; provider credit exhaustion returns a helpful error without substituting a scripted answer. Cart review adds no migration and does not persist model advice; only explicitly approved shopping plans are stored. Rolling back the app disables the review without changing existing user records. There is no billing integration and no fee is charged. Monitor Vercel runtime, Neon storage, and AI Gateway usage; no paid credits were added. Email price alerts and recurring digests remain disabled even if a user saves notification preferences.
 
 ## Extension
 

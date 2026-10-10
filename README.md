@@ -10,10 +10,10 @@ Production is a public beta. Live signup, signin, account-owned data and AI requ
 ## What works
 
 - Real attributed DealNews RSS offers, refreshed every six hours; categories, search, coupons, full source details and actual collected price history.
-- Optional AI comparisons grounded in the collected offers, through Vercel AI Gateway. Ten questions per signed-in user per UTC day.
+- Optional AI answers and shopping-list reviews grounded in the collected offers, through Vercel AI Gateway. A shared limit of ten requests per signed-in user per UTC day.
 - Neon managed authentication: email/password sign-up and sign-in, email verification, reset-password flow, profile/password management and session revocation.
 - Account-owned saved deals, price targets, in-app target matches, preferences and data export.
-- Shopping-list comparisons with explicitly selected alternatives, saved approval plans and a checkout checklist linking to the source.
+- Shopping-list comparisons with AI advice, explicitly selected alternatives, saved approval plans and a checkout checklist linking to the source.
 - A final-cost worksheet separates checkout charges from conditional cashback/card rewards, preserves unknown tax/shipping, and saves account-owned comparisons.
 - User-reported purchase records, savings, refunds and price-adjustment request drafts with retailer-policy notes. Users review and submit requests themselves.
 - A real Chrome/Chromium MV3 search companion, available as an unpacked-extension ZIP.
@@ -48,7 +48,11 @@ npm run build
 
 For the cart handoff and delayed saved-state browser regressions, start the production build with `npm start -- --port 3003`, then run `TEST_BASE_URL=http://localhost:3003 node scripts/cart-ui-smoke.mjs`. The saved-state test mocks its API responses; it does not test authentication or write account data.
 
+`TEST_BASE_URL=http://localhost:3003 node scripts/cart-ai-ui-smoke.mjs` checks semantic alternatives, explicit choices, stale-response handling, quota feedback and draft restoration with controlled browser responses. It makes no model calls or account writes.
+
 `TEST_BASE_URL=http://localhost:3003 npx tsx scripts/shopping-records-smoke.ts` checks actual purchase/comparison APIs with two isolated accounts, including ownership and export. `TEST_BASE_URL=http://localhost:3003 node scripts/purchases-ui-smoke.mjs` checks the purchase/refund browser flow. Both create and remove their own test identities; the server must use the same database as `.env.local`.
+
+`TEST_BASE_URL=https://haggle-blue.vercel.app node scripts/cart-ai-smoke.mjs` checks the real cart-review browser flow with one model request, source validation, unchanged selections, stale-advice removal and the shared Ask/cart quota. It creates and removes its own identity and quota records; use only with the matching owned database.
 
 `RUN_LIVE_INGESTION_TEST=1 npm test` performs actual feed ingestion into the configured database and verifies replay idempotency. `TEST_BASE_URL=http://localhost:3002 npx tsx scripts/auth-smoke.ts` exercises actual managed auth with isolated temporary test identities; it requires the running app to use the same database as `.env.local`. Do not run against a database that you do not own.
 

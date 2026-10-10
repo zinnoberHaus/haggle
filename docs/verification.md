@@ -39,6 +39,20 @@ Purchase browser tests passed plan prefill with the actual paid field left blank
 
 Anonymous calculator browser checks passed at 1440px and 390px. An included coupon was not deducted twice; unknown shipping/tax left final totals unknown; $93 payable remained $93 despite $7 in potential rewards, while conditional cost was $86. The real anonymous save returned 401 and the signin round trip retained the worksheet. No backend records were written in this public calculator check.
 
+Deployment `dpl_5Uxhy6VGxg1F3TthAad5UdX1YqrE` for `89c97bd` reached READY with the production alias assigned, and GitHub Checks run `38085666195` passed. The shopping-records integration script then passed once against production: both managed sessions, purchase/refund CRUD, owner and linked-plan isolation, CSRF rejection, comparison snapshots and server calculations, null unknown costs, isolated exports, and reported-versus-verified savings. Exact test identities and cascading records were removed.
+
+The purchase browser script also passed once against that production alias: receipt creation, refund edit, request download, savings display, export and deletion. January 10 displayed as Jan 10, the mobile document width was 390px, and no browser errors were observed. Cleanup was independently checked. Live public calculator checks at 390px and 1440px confirmed unknown totals and included/additional coupon behavior with no overflow or browser errors.
+
+## Shopping-list AI review
+
+The final requirement audit identified that shopping-list alternatives were only matched by keywords. The added optional AI review now accepts the entered list, returns per-item advice and source-backed candidates, and leaves replacement choices and plan approval to the user. Ask and cart review share the same atomic ten-request daily quota. No migration or new service was needed.
+
+Typecheck and the fresh production build passed. The complete offline suite passed 37 tests; only the separately exercised opt-in live ingestion case was skipped. Nine new tests cover strict input, current/exact/lower-price eligibility, per-item bounds, unknown IDs, duplicate reviews, unsupported model claims, missing output, malformed output and expiry during generation. Independent backend review found no actionable authorization, source-grounding or shared-quota defect.
+
+Controlled browser tests passed semantic candidates beyond keyword matching, no automatic replacement, unknown-source rejection, preserved advice on choice-only changes, cleared advice and choices after item edits, a delayed stale response arriving after a newer review, quota feedback and the sign-in round trip. These browser responses were mocked and made no provider calls or account writes. The existing real anonymous cart save still returned 401 and preserved its draft. Mobile width stayed 390px with no browser errors. One discovered defect—retaining a replacement after the item changed—was fixed and reproduced by the passing regression.
+
+The repeatable `scripts/cart-ai-smoke.mjs` separately exercises one actual model response through the production browser, validates returned sources against the database, checks unchanged choices, and verifies the shared quota using an isolated identity. Production results from that script must be checked after deploying the new route; mocked browser evidence is not a live AI result.
+
 ## Still requiring evidence or external integrations
 
 Provider reset-token semantics were tested, but inbox delivery was not independently verified. Email price alerts/digests, automated retailer carts/checkout/refunds, billing and Chrome Web Store publication are unavailable and labeled accordingly. No full database restore drill or commercial-readiness certification is claimed.

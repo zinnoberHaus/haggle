@@ -1,7 +1,7 @@
 import { generateText, Output } from "ai";
 import { z } from "zod";
 import { authorized, readJson } from "@/lib/user-data";
-import { sql } from "@/lib/db";
+import { AI_LIMIT_MESSAGE, consumeAiRequest } from "@/lib/ai-usage";
 import { getDeals } from "@/lib/deals";
 export const maxDuration = 45;
 export async function POST(request: Request) {
@@ -11,19 +11,16 @@ export async function POST(request: Request) {
     const parsed = z
       .object({ query: z.string().trim().min(2).max(500) })
       .strict()
-      .safeParse(await readJson(request));
+      .safeParse(await readJson(request).catch(() => null));
     if (!parsed.success)
       return Response.json(
         { error: "Enter a question between 2 and 500 characters." },
         { status: 400 },
       );
-    const usage =
-      await sql`INSERT INTO ai_usage(user_id,day,requests) VALUES(${session.user.id},CURRENT_DATE,1) ON CONFLICT(user_id,day) DO UPDATE SET requests=ai_usage.requests+1 WHERE ai_usage.requests<10 RETURNING requests`;
-    if (!usage.length)
+    if (!(await consumeAiRequest(session.user.id)))
       return Response.json(
         {
-          error:
-            "You’ve used today’s 10 free AI questions. You can keep searching the feed.",
+          error: AI_LIMIT_MESSAGE,
         },
         { status: 429 },
       );
